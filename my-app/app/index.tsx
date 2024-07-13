@@ -1,5 +1,11 @@
 import React from "react";
-import { useWindowDimensions, View, StyleSheet, Image, Text } from "react-native";
+import {
+  useWindowDimensions,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { FaMicrophone } from "react-icons/fa";
 
@@ -19,7 +25,12 @@ export default function Index() {
         />
       </LinearGradient>
       <View style={styles.chatArea}>
-        <Text style={[styles.h1, {textAlign: 'left'}]}>Live Transcription:</Text>
+        <Text style={[styles.h1, { textAlign: "left" }]}>
+          Live Transcription:
+        </Text>
+      </View>
+      <View style={styles.footer}>
+        <FaMicrophone name="microphone" size={24} color="black" />
       </View>
     </View>
   );
@@ -28,13 +39,14 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
     alignItems: "center",
   },
   chatArea: {
     maxWidth: 375, // Fixed width representing a typical mobile phone screen
   },
   gradient: {
-    height: 128, 
+    height: 128,
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
@@ -45,14 +57,24 @@ const styles = StyleSheet.create({
     // width: "100%",
   },
   h1: {
-    fontStyle: 'normal',
-    fontWeight: '700',
+    flex: 1,
+    fontStyle: "normal",
+    fontWeight: "700",
     fontSize: 24,
-    lineHeight: 22, 
-    color: '#000000',
-    textShadowColor: 'rgba(0, 0, 0, 0.25)',
+    lineHeight: 22,
+    color: "#000000",
+    textShadowColor: "rgba(0, 0, 0, 0.25)",
     textShadowOffset: { width: 0, height: 10 },
     textShadowRadius: 10,
     zIndex: 11,
-  }
+    alignSelf: "flex-start",
+  },
+  footer: {
+    width: "100%",
+    height: 60,
+    justifyContent: "center", // Center the icon vertically
+    alignItems: "center", // Center the icon horizontally
+    alignSelf: 'flex-end',
+    flexShrink: 0,
+  },
 });
