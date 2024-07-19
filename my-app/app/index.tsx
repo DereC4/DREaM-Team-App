@@ -40,10 +40,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
+    justifyContent: "space-between",
     alignItems: "center",
   },
   chatArea: {
-    maxWidth: 375, // Fixed width representing a typical mobile phone screen
+    width: 375,
+    paddingHorizontal: 10,
+    flex: 1,
   },
   gradient: {
     height: 128,
