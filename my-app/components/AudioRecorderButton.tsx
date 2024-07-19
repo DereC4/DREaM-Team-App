@@ -46,12 +46,12 @@ const AudioRecorder = () => {
 
   return (
     <View>
-      <Pressable
+      {/* <Pressable
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       style={styles.button}>
         <FaMicrophone name="microphone" size={24} color="black" />
-      </Pressable>
+      </Pressable> */}
     </View>
   );
 };
