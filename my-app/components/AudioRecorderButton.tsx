@@ -50,7 +50,7 @@ const AudioRecorder = () => {
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       style={styles.button}>
-        <FontAwesome name="microphone" size={24} color="black" />
+        <FaMicrophone name="microphone" size={24} color="black" />
       </TouchableOpacity>
     </View>
   );

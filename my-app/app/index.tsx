@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { FaMicrophone } from "react-icons/fa";
+import AudioRecorder from "@/components/AudioRecorderButton";
 
 export default function Index() {
   return (
@@ -29,6 +30,7 @@ export default function Index() {
           Live Transcription:
         </Text>
       </View>
+      <AudioRecorder></AudioRecorder>
       <View style={styles.footer}>
         <FaMicrophone name="microphone" size={24} color="black" />
       </View>
