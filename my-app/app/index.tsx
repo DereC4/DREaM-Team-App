@@ -30,9 +30,8 @@ export default function Index() {
           Live Transcription:
         </Text>
       </View>
-      <AudioRecorder></AudioRecorder>
       <View style={styles.footer}>
-        <FaMicrophone name="microphone" size={24} color="black" />
+        <AudioRecorder/> 
       </View>
     </View>
   );
@@ -81,5 +80,6 @@ const styles = StyleSheet.create({
     alignItems: "center", // Center the icon horizontally
     alignSelf: 'flex-end',
     flexShrink: 0,
+    paddingBottom: 50,
   },
 });

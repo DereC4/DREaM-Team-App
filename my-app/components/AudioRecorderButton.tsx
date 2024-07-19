@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { View, StyleSheet, Button, Pressable } from "react-native";
-import * as FileSystem from "expo-file-system";
+import { View, StyleSheet, Pressable, Platform} from "react-native";
 import { Audio } from 'expo-av';
 import { FaMicrophone } from "react-icons/fa";
 
@@ -29,10 +28,36 @@ const AudioRecorder = () => {
 
   const stopRecording = async() => {
     if(recording) {
-      setIsRecording(false);
       await recording.stopAndUnloadAsync();
+      const { sound, status } = await recording.createNewLoadedSoundAsync();
       const uri = recording.getURI();
-      console.log('Recording stopped and stored at', uri);
+      if(uri) {
+        downloadFile(uri);
+      }
+
+      setRecording(undefined);
+      setIsRecording(false);
+    }
+  }
+
+  const downloadFile = async (uri:string) => {
+    try {
+      if (Platform.OS === 'web') {
+        const response = await fetch(uri);
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'recording.m4a';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+      } else {
+        console.warn('This is a mock app and file operations are only available for web.');
+      }
+    } catch (error) {
+      console.error('Download Failed', error);
     }
   }
 
