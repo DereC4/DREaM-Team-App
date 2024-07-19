@@ -36,36 +36,53 @@ const AudioRecorder = () => {
     }
   }
 
-  const handlePressIn = () => {
-    startRecording();
-  };
+  // const handlePressIn = () => {
+  //   startRecording();
+  // };
 
-  const handlePressOut = () => {
-    stopRecording();
-  };
+  // const handlePressOut = () => {
+  //   stopRecording();
+  // };
+
+  const toggleRecording = async() => {
+    if (isRecording) {
+      await stopRecording();
+    } else {
+      await startRecording();
+    }
+  }
 
   return (
-    <View>
+    <View
+      style={styles.container}
+      >
       {/* <Pressable
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       style={styles.button}>
         <FaMicrophone name="microphone" size={24} color="black" />
       </Pressable> */}
+      <Pressable
+        onPress={toggleRecording}
+        style={[styles.button, isRecording && styles.buttonRecording]}
+      >
+        <FaMicrophone name="microphone" size={24} color="black" />
+      </Pressable>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
   },
   button: {
     backgroundColor: 'lightgray',
     padding: 20,
     borderRadius: 50,
+  },
+  buttonRecording: {
+    backgroundColor: '#DC143C',
   },
 });
 
