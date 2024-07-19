@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, StyleSheet, Button, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Button, Pressable } from "react-native";
 import * as FileSystem from "expo-file-system";
 import { Audio } from 'expo-av';
 import { FaMicrophone } from "react-icons/fa";
@@ -46,12 +46,12 @@ const AudioRecorder = () => {
 
   return (
     <View>
-      <TouchableOpacity
+      <Pressable
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       style={styles.button}>
         <FaMicrophone name="microphone" size={24} color="black" />
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 };
