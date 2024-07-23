@@ -1,16 +1,38 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   useWindowDimensions,
   View,
   StyleSheet,
   Image,
   Text,
+  FlatList,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { FaMicrophone } from "react-icons/fa";
 import AudioRecorder from "@/components/AudioRecorderButton";
 
+interface Message {
+  id: string;
+  text: string;
+}
+
 export default function Index() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputText, setInputText] = useState<string>('');
+
+  const sendMessage = () => {
+    if (inputText.trim()) {
+      setMessages([...messages, { id: messages.length.toString(), text: inputText }]);
+      setInputText('');
+    }
+  };
+
+  const renderItem = ({ item }: {item: Message}) => (
+    <View style={chatStyles.messageBubble}>
+      <Text style={chatStyles.messageText}>{item.text}</Text>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -28,6 +50,12 @@ export default function Index() {
       <View style={styles.chatArea}>
         <Text style={[styles.h1, { textAlign: "left" }]}>
           Live Transcription:
+          <FlatList
+          data={messages}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={chatStyles.chatContainer}
+        />
         </Text>
       </View>
       <View style={styles.footer}>
@@ -83,3 +111,22 @@ const styles = StyleSheet.create({
     paddingBottom: 50,
   },
 });
+
+const chatStyles = StyleSheet.create({
+  chatContainer: {
+    paddingVertical: 10,
+  },
+  messageBubble: {
+    backgroundColor: '#0084ff',
+    borderRadius: 15,
+    padding: 10,
+    marginVertical: 5,
+    marginHorizontal: 10,
+    alignSelf: 'flex-start',
+    maxWidth: '80%',
+  },
+  messageText: {
+    color: '#ffffff',
+    fontSize: 16,
+  },
+})
