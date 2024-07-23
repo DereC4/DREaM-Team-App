@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState, useRef } from "react";
 import {
   useWindowDimensions,
   View,
@@ -14,21 +14,69 @@ import AudioRecorder from "@/components/AudioRecorderButton";
 interface Message {
   id: string;
   text: string;
+  type: "sent" | "received";
 }
 
-export default function Index() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputText, setInputText] = useState<string>('');
+const templateMessages: Message[] = [
+  { id: "0", text: "Thanks for contacting AT&T, how can we help you?", type: "received" },
+  { id: "1", text: "This is a test!", type: "received" },
+  { id: "2", text: "This is a test!!", type: "sent" },
+  { id: "3", text: "Don't push this to prod!!!", type: "received" },
+  { id: "4", text: "This is a test!", type: "sent" },
+];
 
-  const sendMessage = () => {
-    if (inputText.trim()) {
-      setMessages([...messages, { id: messages.length.toString(), text: inputText }]);
-      setInputText('');
+export default function Index() {
+  const [messages, setMessages] = useState<Message[]>(templateMessages);
+  const [inputText, setInputText] = useState<string>("");
+  const flatListRef = useRef<FlatList>(null);
+
+  const getMessageFromApi = async (message: string) => {
+    try {
+      const response = await fetch('https://template.com/api/sendMessage', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const responseData = await response.json();
+      console.log('Message sent successfully:', responseData);
+      return responseData;
+    } catch (error) {
+      console.error('Error sending message:', error);
+      return null;
     }
   };
 
-  const renderItem = ({ item }: {item: Message}) => (
-    <View style={chatStyles.messageBubble}>
+  const sendMessage = async() => {
+    if (inputText.trim()) {
+      setMessages([
+        ...messages,
+        { id: messages.length.toString(), text: inputText, type: "sent" },
+      ]);
+      setInputText("");
+    }
+  };
+
+  /**
+   * Show the messages
+   * @param param0 
+   * @returns 
+   */
+  const renderItem = ({ item }: { item: Message }) => (
+    <View
+      style={[
+        chatStyles.messageBubble,
+        item.type === "sent"
+          ? chatStyles.sentMessage
+          : chatStyles.receivedMessage,
+      ]}
+    >
       <Text style={chatStyles.messageText}>{item.text}</Text>
     </View>
   );
@@ -50,16 +98,17 @@ export default function Index() {
       <View style={styles.chatArea}>
         <Text style={[styles.h1, { textAlign: "left" }]}>
           Live Transcription:
-          <FlatList
+        </Text>
+        <FlatList
+          ref={flatListRef}
           data={messages}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           contentContainerStyle={chatStyles.chatContainer}
         />
-        </Text>
       </View>
       <View style={styles.footer}>
-        <AudioRecorder/> 
+        <AudioRecorder />
       </View>
     </View>
   );
@@ -68,7 +117,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "center",
   },
@@ -89,7 +138,6 @@ const styles = StyleSheet.create({
     // width: "100%",
   },
   h1: {
-    flex: 1,
     fontStyle: "normal",
     fontWeight: "700",
     fontSize: 24,
@@ -106,7 +154,7 @@ const styles = StyleSheet.create({
     height: 60,
     justifyContent: "center", // Center the icon vertically
     alignItems: "center", // Center the icon horizontally
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
     flexShrink: 0,
     paddingBottom: 50,
   },
@@ -117,16 +165,31 @@ const chatStyles = StyleSheet.create({
     paddingVertical: 10,
   },
   messageBubble: {
-    backgroundColor: '#0084ff',
-    borderRadius: 15,
+    backgroundColor: "#0084ff",
+    borderRadius: 5,
     padding: 10,
     marginVertical: 5,
     marginHorizontal: 10,
-    alignSelf: 'flex-start',
-    maxWidth: '80%',
+    alignSelf: "flex-start",
+    maxWidth: "80%",
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5, 
   },
   messageText: {
-    color: '#ffffff',
+    color: "black",
     fontSize: 16,
   },
-})
+  sentMessage: {
+    backgroundColor: "#009FDB",
+    alignSelf: "flex-end",
+  },
+  receivedMessage: {
+    backgroundColor: "#white",
+    alignSelf: "flex-start",
+    borderColor: '#d3d3d3',
+    borderWidth: 1,
+  },
+});
